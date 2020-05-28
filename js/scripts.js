@@ -4,14 +4,7 @@ const searchForm = document.createElement('form');
 const searchSearch = document.createElement('input');
 const searchSubmit = document.createElement('input');
 
-// const galleryDiv = document.getElementById('gallery');
-// const cardDiv = document.createElement('div');
-// const cardImgDiv = document.createElement('div');
-// const cardImg = document.createElement('img');
-// const cardInfoDiv = document.createElement('div');
-// const nameh3 = document.createElement('h3');
-// const cardEmail = document.createElement('p');
-// const cardArea = document.createElement('p');
+const galleryDiv = document.getElementById('gallery');
 
 const modalContainerDiv = document.createElement('div');
 const body = document.body;
@@ -37,20 +30,6 @@ searchSubmit.type = 'submit';
 searchSubmit.value = '&#x1F50D;';
 searchSubmit.id = 'search-submit';
 searchSubmit.className = 'search-submit';
-
-// cardDiv.className = 'card';
-// cardImgDiv.className = 'card-img-container';
-// cardImg.className = 'card-img';
-// cardImg.src = 'https://placehold.it/90x90';
-// cardImg.alt = 'profile picture'
-// cardInfoDiv.className = 'card-info-container';
-// nameh3.id = 'name';
-// nameh3.className = 'card-name cap';
-// nameh3.textContent = 'first last';
-// cardEmail.className = 'card-text';
-// cardEmail.textContent = 'email';
-// cardArea.className = 'card-text cap';
-// cardArea.textContent = 'city, state';
 
 modalContainerDiv.className = 'modal-container';
 modalDiv.className = 'modal';
@@ -79,14 +58,6 @@ searchDiv[0].appendChild(searchForm);
 searchForm.appendChild(searchSearch);
 searchForm.appendChild(searchSubmit);
 
-// galleryDiv.appendChild(cardDiv);
-// cardDiv.appendChild(cardImgDiv);
-// cardImgDiv.appendChild(cardImg);
-// cardDiv.appendChild(cardInfoDiv);
-// cardInfoDiv.appendChild(nameh3);
-// cardInfoDiv.appendChild(cardEmail);
-// cardInfoDiv.appendChild(cardArea);
-
 body.insertBefore(modalContainerDiv, bodyScript);
 modalContainerDiv.appendChild(modalDiv);
 modalDiv.appendChild(modalButton);
@@ -110,12 +81,31 @@ function fetchData(url) {
             //.then(checkStatus)
             .then(res => res.json())
             .catch(error => console.log('Looks like theres an error', error))
-
 }
 
-fetchData('https://randomuser.me/api/')
-  .then(data => {
-    const galleryDiv = document.getElementById('gallery');
+for(i = 0; i < 12; i += 1) {
+  fetchData('https://randomuser.me/api/')
+    .then(data => {
+        const user = data.results[0]
+        generateCard(user)
+    })
+    // .then(data => {
+    //   const userLength = document.querySelectorAll('div.card').length;
+    //   const userArray = document.querySelectorAll('div.card');
+    //   if (userLength === 12) {
+    //     for(i = 0; i < 12; i += 1) {
+    //       userArray[i].addEventListener('click', e => {
+    //         if (e.target.parentNode.parentNode.className ==='card') {
+    //           const user = e.target.parentNode.parentNode;
+    //           console.log(user);
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
+  }
+
+  function generateCard(user) {
     const cardDiv = document.createElement('div');
     const cardImgDiv = document.createElement('div');
     const cardImg = document.createElement('img');
@@ -124,12 +114,10 @@ fetchData('https://randomuser.me/api/')
     const cardEmail = document.createElement('p');
     const cardArea = document.createElement('p');
 
-    const user = data.results[0]
-
     cardDiv.className = 'card';
     cardImgDiv.className = 'card-img-container';
     cardImg.className = 'card-img';
-    cardImg.src = 'https://placehold.it/90x90';
+    cardImg.src = user.picture.large;
     cardImg.alt = 'profile picture'
     cardInfoDiv.className = 'card-info-container';
     nameh3.id = 'name';
@@ -147,16 +135,5 @@ fetchData('https://randomuser.me/api/')
     cardInfoDiv.appendChild(nameh3);
     cardInfoDiv.appendChild(cardEmail);
     cardInfoDiv.appendChild(cardArea);
-
-
-    console.log(user)
-    console.log(user.name.first) //First Name
-    console.log(user.name.last) //Last Name
-    console.log(user.email) //email
-    console.log(user.location.city) //City
-    console.log(user.location.state) //state
-  })
-
-  const test = document.getElementById('gallery');
-  console.log(test);
+}
 //Create a modal window
