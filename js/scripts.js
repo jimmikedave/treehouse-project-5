@@ -1,5 +1,4 @@
 const galleryDiv = document.getElementById('gallery');
-let userArray = [];
 
 //converts API to json and checks for an error
 function fetchData(url) {
@@ -10,39 +9,37 @@ function fetchData(url) {
 }
 
 //12 random users are pulled
-for(i = 0; i < 12; i += 1) {
-  fetchData('https://randomuser.me/api/')
-    //pushes each object into an array
-    //generates a card for the object
-    .then(data => {
-        const user = data.results[0]
-        generateCard(user)
-        userArray.push(user);
-    })
-    //displays a modal window when the object card is clicked
-    .then(data => {
-      if (userArray.length === 12){
-        const cardArray = document.querySelectorAll('div.card');
+fetchData('https://randomuser.me/api/?results=12')
+  //pushes each object into an array
+  //generates a card for the object
+  .then(data => {
+    const user = data.results;
 
+    for(i = 0; i < 12; i += 1) {
+          generateCard(user[i]);
+
+          const cardArray = document.querySelectorAll('div.card');
+
+      if (cardArray.length === 12) {
         for(i = 0; i < 12; i += 1) {
-          cardArray[i].addEventListener('click', e => {
-            const cardEmail = e.currentTarget
-              .getElementsByClassName('card-text')[0]
-              .textContent;
+        cardArray[i].addEventListener('click', e => {
+          const cardEmail = e.currentTarget
+            .getElementsByClassName('card-text')[0]
+            .textContent
 
-              for(i = 0; i < 12; i += 1){
-                if(cardEmail === userArray[i].email) {
-                  console.log(userArray[i])
-                  generateModal(userArray[i]);
+            for(i = 0; i < 12; i += 1){
+              if(cardEmail === user[i].email) {
+                console.log(user[i])
+                generateModal(user[i]);
               }
             }
-          })
-        }
+        })
       }
-    })
+    }
   }
+})
 
-  //dynamically creates a card for the API object
+  // dynamically creates a card for the API object
   function generateCard(user) {
     const cardDiv = document.createElement('div');
     const cardImgDiv = document.createElement('div');
@@ -95,7 +92,7 @@ for(i = 0; i < 12; i += 1) {
     const modalBirthday = document.createElement('p');
     const dob =  user.dob.date.split('');
     const birthday = dob.slice(0, 10).join('');
-    
+
 
     modalContainerDiv.className = 'modal-container';
     modalDiv.className = 'modal';
@@ -120,9 +117,6 @@ for(i = 0; i < 12; i += 1) {
       ${user.location.city}, ${user.location.state} ${user.location.postcode}`;
     modalBirthday.className = 'modal-text';
     modalBirthday.textContent = `Birthday: ${birthday}`;
-
-
-
 
     body.insertBefore(modalContainerDiv, bodyScript);
     modalContainerDiv.appendChild(modalDiv);
