@@ -1,4 +1,27 @@
-const galleryDiv = document.getElementById('gallery');
+//dynamically creates the search bar
+const searchContainer = document.getElementsByClassName('search-container');
+const searchForm = document.createElement('form');
+const searchInput = document.createElement('input');
+const searchSubmit = document.createElement('input');
+
+searchForm.action = '#';
+searchForm.method = 'get';
+searchInput.type = 'search';
+searchInput.id = 'search-input';
+searchInput.className = 'search-Input';
+searchInput.placeholder = 'Search...';
+searchSubmit.type = 'submit';
+searchSubmit.value = 'Search';
+searchSubmit.id = 'search-submit';
+searchSubmit.className = 'search-submit';
+
+searchContainer[0].appendChild(searchForm);
+searchForm.appendChild(searchInput);
+searchForm.appendChild(searchSubmit);
+
+//targets the search elements created
+const search = document.getElementById('search-input');
+const submit = document.getElementById('search-submit');
 
 //converts API to json and checks for an error
 function fetchData(url) {
@@ -9,12 +32,10 @@ function fetchData(url) {
 }
 
 //12 random users are pulled
-fetchData('https://randomuser.me/api/?results=12')
-  //pushes each object into an array
-  //generates a card for the object
+fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
   .then(data => {
     const user = data.results;
-
+//calls the generateCard function to create a card for each API
     for(i = 0; i < 12; i += 1) {
           generateCard(user[i]);
 
@@ -31,16 +52,18 @@ fetchData('https://randomuser.me/api/?results=12')
               if(cardEmail === user[i].email) {
                 console.log(user[i])
                 generateModal(user[i]);
-              }
             }
+          }
         })
       }
+      console.log(cardArray[0].getElementsByClassName('card-name')[0].textContent);
     }
   }
 })
 
   // dynamically creates a card for the API object
   function generateCard(user) {
+    const galleryDiv = document.getElementById('gallery');
     const cardDiv = document.createElement('div');
     const cardImgDiv = document.createElement('div');
     const cardImg = document.createElement('img');
@@ -92,7 +115,9 @@ fetchData('https://randomuser.me/api/?results=12')
     const modalBirthday = document.createElement('p');
     const dob =  user.dob.date.split('');
     const birthday = dob.slice(0, 10).join('');
-
+    const modalCycle = document.createElement('div');
+    const modalPrev = document.createElement('button');
+    const modalNext = document.createElement('button');
 
     modalContainerDiv.className = 'modal-container';
     modalDiv.className = 'modal';
@@ -117,6 +142,16 @@ fetchData('https://randomuser.me/api/?results=12')
       ${user.location.city}, ${user.location.state} ${user.location.postcode}`;
     modalBirthday.className = 'modal-text';
     modalBirthday.textContent = `Birthday: ${birthday}`;
+    modalCycle.className = 'modal-btn-container';
+    modalPrev.type = 'button';
+    modalPrev.id = 'modal-prev';
+    modalPrev.className = 'modal-prev btn';
+    modalPrev.textContent = 'Prev';
+    modalNext.type = 'button';
+    modalNext.id = 'modal-next';
+    modalNext.className = 'modal-next btn';
+    modalNext.textContent = 'Next';
+
 
     body.insertBefore(modalContainerDiv, bodyScript);
     modalContainerDiv.appendChild(modalDiv);
@@ -131,10 +166,44 @@ fetchData('https://randomuser.me/api/?results=12')
     modalInfoDiv.appendChild(modalPhone);
     modalInfoDiv.appendChild(modalAddress);
     modalInfoDiv.appendChild(modalBirthday);
+    modalDiv.appendChild(modalCycle);
+    modalCycle.appendChild(modalPrev);
+    modalCycle.appendChild(modalNext);
 
     modalContainerDiv.style.display = '';
 
     modalButton.addEventListener('click', e => {
       modalContainerDiv.style.display = 'none';
     })
+
+    const next = document.getElementById('modal-next');
+
+    next.addEventListener('click', () => {
+      console.log('yes');
+    })
   };
+
+
+  function searchFilter() {
+    const apiArray = document.querySelectorAll('div.card');
+
+    for(i = 0; i < 12; i += 1) {
+      const apiName = apiArray[i].getElementsByClassName('card-name')[0].textContent
+
+      if(apiName.toLowerCase().indexOf(search.value.toLowerCase()) > -1){
+        apiArray[i].style.display = '';
+      } else {
+        apiArray[i].style.display = 'none';
+      }
+    }
+  }
+
+//filters through the names based on the input value
+search.addEventListener('input', () => {
+  searchFilter()
+});
+
+//filters through the names based on the input value
+submit.addEventListener('click', () => {
+  searchFilter()
+})
