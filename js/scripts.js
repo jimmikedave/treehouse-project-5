@@ -38,7 +38,6 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
 //calls the generateCard function to create a card for each API
     for(i = 0; i < 12; i += 1) {
           generateCard(user[i]);
-
           const cardArray = document.querySelectorAll('div.card');
 
       if (cardArray.length === 12) {
@@ -50,16 +49,14 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
 
             for(i = 0; i < 12; i += 1){
               if(cardEmail === user[i].email) {
-                console.log(user[i])
-                generateModal(user[i]);
+                generateModal(user[i], i, user);
+              }
             }
-          }
-        })
+          })
+        }
       }
-      console.log(cardArray[0].getElementsByClassName('card-name')[0].textContent);
     }
-  }
-})
+  })
 
   // dynamically creates a card for the API object
   function generateCard(user) {
@@ -96,7 +93,7 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
   }
 
   //dynamically creates a modal window for the API object
-  function generateModal(user){
+  function generateModal(user, i, modal){
 
     const modalContainerDiv = document.createElement('div');
     const body = document.body;
@@ -152,7 +149,6 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
     modalNext.className = 'modal-next btn';
     modalNext.textContent = 'Next';
 
-
     body.insertBefore(modalContainerDiv, bodyScript);
     modalContainerDiv.appendChild(modalDiv);
     modalDiv.appendChild(modalButton);
@@ -172,18 +168,43 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
 
     modalContainerDiv.style.display = '';
 
+    const next = document.getElementById('modal-next');
+    const prev = document.getElementById('modal-prev');
+    const modalD = document.querySelector('div.modal-container');
+
+    //closes the modal window when clicked
     modalButton.addEventListener('click', e => {
-      modalContainerDiv.style.display = 'none';
+      body.removeChild(modalD);
     })
 
-    const next = document.getElementById('modal-next');
+    //closes the current modal window and loads the next user
+    next.addEventListener('click', (e) => {
+       body.removeChild(modalD);
+       let nextIndex = i + 1;
+       console.log(i);
+       if (i === 11) {
+         let nextIndex = 0 + 1;
+         generateModal(modal[0], nextIndex, modal)
+       } else {
+         generateModal(modal[nextIndex], nextIndex, modal)
+       }
+    })
 
-    next.addEventListener('click', () => {
-      console.log('yes');
+    //closes the current modal window and loads the previous user
+    prev.addEventListener('click', (e) => {
+       body.removeChild(modalD);
+       let prevIndex = i - 1;
+       console.log(i);
+       if (i === 0) {
+         let prevIndex = 11 - 1;
+         generateModal(modal[11], prevIndex, modal)
+       } else {
+         generateModal(modal[prevIndex], prevIndex, modal)
+       }
     })
   };
 
-
+  //displays names based on index matching
   function searchFilter() {
     const apiArray = document.querySelectorAll('div.card');
 
