@@ -181,7 +181,7 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
     next.addEventListener('click', (e) => {
        body.removeChild(modalD);
        let nextIndex = i + 1;
-       console.log(i);
+      //  console.log(i);
        if (i === 11) {
          let nextIndex = 0 + 1;
          generateModal(modal[0], nextIndex, modal)
@@ -194,7 +194,7 @@ fetchData('https://randomuser.me/api/?nat=ch,gb,ie,us&results=12')
     prev.addEventListener('click', (e) => {
        body.removeChild(modalD);
        let prevIndex = i - 1;
-       console.log(i);
+      //  console.log(i);
        if (i === 0) {
          let prevIndex = 11 - 1;
          generateModal(modal[11], prevIndex, modal)
